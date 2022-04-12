@@ -22,7 +22,7 @@
 
             function renderMessage(message) {
                 $('.messages').append(
-                    `<div class="message"><strong>${message.author}</strong>: ${message.message}</div>`
+                    `<div class="message"><strong>${message.idUserSender}</strong>: ${message.textContent}</div>`
                 );
             }
 
@@ -42,16 +42,13 @@
 
                 if (author.length && message.length) {
                     var messageObject = {
-                        idUserReceiver: '',
-                        message: '',
+                        idUserReceiver: '2',
+                        message: 'Olá, tudo bem?',
                         idToken:
-                            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTc3ODM5MSwidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5Nzc4MzkxLCJleHAiOjE2NDk3ODE5OTEsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.HQWvMa0fRV7cu86sv7DxPAlKsyriMN20p1HsDoYnXdnEb5BdAqUy1swl1boRbWlYmbNYrXCGyTE6f4Jdh1mPgqq6neAREd0Al8bNfLuVFsBThaJWmtgs2VSuPY9T1CcPYUi2VIjbRP97htvemZnomguyIx_2DGC2nbxOhiXWZiZFP9aPmYu_SWMLIa6MyY8vzfIffwqd0h-G2S7JbtWg6GiOAoqyc4jb_14lpgd4prK370k8Q7v6zgHmDQ8QbPNjZvB_NdelmPfKsg09S7wG2_xrvGH3J-0ZxakhNQchi0ssk6oOkcPVkletN0e4T_Jr16VDe_r9MRFeTuY9tgZ4Lw',
+                            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTc5NTkxMywidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5Nzk1OTEzLCJleHAiOjE2NDk3OTk1MTMsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.h2kswWnz8-00b40fVTrQrPk9nTApxodk7uQ-L1hQCBnIdjHSBDCXnC8CxR_v1mS9hLk_npKvZhOTuBSbwPDnsCbEy4ynWxuJIwdvy91YwJyHVArNgRsL3vmiRFTE1MbTa4FvKH6pB8ruku51zRNjLXNYOd5po2DgCPW4CM4KWWdI_VakBpbUxEN7WbskPFlZzfVCj0ZG-8Q_IyUaXvOzroxnYsbNM0_XND8y2k_Qyeo3z2h5ugSEeKcvWXEWm9f7yySsM-bndInkvaePFRUsBWMZUQP_hgMRse_f23ZN5yV4-fgY6SDbWGRYOki7rHArq90HMoYsL_TF6iVb_zqRGQ',
                     };
 
-                    socket.emit('sendMessage', {
-                        idToken:
-                            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTc3ODM5MSwidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5Nzc4MzkxLCJleHAiOjE2NDk3ODE5OTEsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.HQWvMa0fRV7cu86sv7DxPAlKsyriMN20p1HsDoYnXdnEb5BdAqUy1swl1boRbWlYmbNYrXCGyTE6f4Jdh1mPgqq6neAREd0Al8bNfLuVFsBThaJWmtgs2VSuPY9T1CcPYUi2VIjbRP97htvemZnomguyIx_2DGC2nbxOhiXWZiZFP9aPmYu_SWMLIa6MyY8vzfIffwqd0h-G2S7JbtWg6GiOAoqyc4jb_14lpgd4prK370k8Q7v6zgHmDQ8QbPNjZvB_NdelmPfKsg09S7wG2_xrvGH3J-0ZxakhNQchi0ssk6oOkcPVkletN0e4T_Jr16VDe_r9MRFeTuY9tgZ4Lw',
-                    });
+                    socket.emit('sendMessage', messageObject);
                 }
             });
         </script>
