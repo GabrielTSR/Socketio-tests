@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Notificações</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <form id="chat">
+        <div class="messages"></div>
+    </form>
+    <script type="text/javascript">
+        var socket = io('http://localhost:3333');
+
+        fetch('http://localhost:3333/notifications', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTg1OTAyMywidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5ODU5MDIzLCJleHAiOjE2NDk4NjI2MjMsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.qNgAKHLt13rE9qxEKMGEPPH7mFJY-OijxozJGLyj8fcmc8Qr04orsfB7MLza2ypX9q3r8lHiIpz512Y6MtA2C_t2qrobfS_KQKCzZ-ZUPLUH0zI7aHHqoljphVqV4d1lXTwRoO8gEfoljxn3xO7ZAzqRLpRzqOTUOSCGjwXCILv9j3yO3cK28WPMWGpuhKBA0KTe2rC44d8KEKqWDtq0j_yx-7oMe1j3oRVFNwrBbmQzWcbLeRQJda-uGKb_Cigh7NdpxdpyaPNd5RekipHuqoAAuJJX0Vv1lqry9bMDqtL5JUi25SQmWATW3n8mpfeDM_SeE-pvdxLf3KTQcJ6M9g',
+                },
+            })
+            .then((response) => response.json())
+            .then((notifications) => {
+                if (notifications.length > 0) {
+                    for (notification of notifications) {
+                        console.log(notification);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        socket.on('receivedNotification', (notification) => {
+            console.log(notification);
+        });
+    </script>
+</body>
+
+</html>

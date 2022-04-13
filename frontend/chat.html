@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <form id="chat">
+        <div class="messages"></div>
+        <input type="text" name="message" placeholder="Digite sua mensagem" />
+        <button type="submit">Enviar</button>
+    </form>
+    <script type="text/javascript">
+        var socket = io('http://localhost:3333');
+
+        function renderMessage(message) {
+            $('.messages').append(
+                `<div class="message"><strong>${message.idUserSender}</strong>: ${message.textContent}</div>`
+            );
+        }
+
+        fetch('http://localhost:3333/messages/1', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXVkIjoiaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXV0aF90aW1lIjoxNjQ5ODU5MDAyLCJ1c2VyX2lkIjoieXVlZE85SjVPU1luSnVSdlJHYlgyMnlwbUZ6MSIsInN1YiI6Inl1ZWRPOUo1T1NZbkp1UnZSR2JYMjJ5cG1GejEiLCJpYXQiOjE2NDk4NTkwMDIsImV4cCI6MTY0OTg2MjYwMiwiZW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsidGVzdGVAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.x6IePoApAiqyvu6x_Yc1Ve7fmimbrCP_A2ubr9C4cvwbGxLO259rg7d-kqNOxXVvE-2kj82f770Xq0lbBH1JuOhq02BwHqH6TzassgfuSTnzz9oc4HbgwfNR4lXKJ4FHO-73YdAdH33rETVLT2p4eG85FALqhYdijZooLlz8meVFqtBYdUV02oDzbMvPYzglfhIEIZd_TDTrlEozONI3ri1ct4OBLUhnoNhbcM7UbCANcbMhbJomPqvXMel__5Qu9PTtq65D5w5iSsQRguoqOlDP11qerlN_zJg-OT8UQx1f2xmQkKSTlPXRZJ3iVzso3OYWIGbpuYCsBvYxRJr4rg',
+                },
+            })
+            .then((response) => response.json())
+            .then((messages) => {
+                if (messages.length > 0) {
+                    for (message of messages) {
+                        renderMessage(message);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        socket.on('receivedMessage', (message) => {
+            console.log(message);
+            renderMessage(message);
+        });
+
+        socket.on('receivedNotification', (message) => {
+            console.log(message);
+        });
+
+        $('#chat').submit((evt) => {
+            evt.preventDefault();
+
+            var message = $('input[name=message]').val();
+
+            if (message.length) {
+                var messageObject = {
+                    idUserReceiver: 1,
+                    message,
+                    idToken: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXVkIjoiaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXV0aF90aW1lIjoxNjQ5ODU5MDAyLCJ1c2VyX2lkIjoieXVlZE85SjVPU1luSnVSdlJHYlgyMnlwbUZ6MSIsInN1YiI6Inl1ZWRPOUo1T1NZbkp1UnZSR2JYMjJ5cG1GejEiLCJpYXQiOjE2NDk4NTkwMDIsImV4cCI6MTY0OTg2MjYwMiwiZW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsidGVzdGVAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.x6IePoApAiqyvu6x_Yc1Ve7fmimbrCP_A2ubr9C4cvwbGxLO259rg7d-kqNOxXVvE-2kj82f770Xq0lbBH1JuOhq02BwHqH6TzassgfuSTnzz9oc4HbgwfNR4lXKJ4FHO-73YdAdH33rETVLT2p4eG85FALqhYdijZooLlz8meVFqtBYdUV02oDzbMvPYzglfhIEIZd_TDTrlEozONI3ri1ct4OBLUhnoNhbcM7UbCANcbMhbJomPqvXMel__5Qu9PTtq65D5w5iSsQRguoqOlDP11qerlN_zJg-OT8UQx1f2xmQkKSTlPXRZJ3iVzso3OYWIGbpuYCsBvYxRJr4rg',
+                };
+
+                socket.emit('sendMessage', messageObject);
+            }
+        });
+    </script>
+</body>
+
+</html>
