@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Notificações</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
 
-        <link rel="stylesheet" href="style.css" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Notificações</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
 
-    <body>
-        <form id="chat">
-            <div class="messages"></div>
-        </form>
-        <script type="text/javascript">
-            var socket = io('http://localhost:3333');
+    <link rel="stylesheet" href="style.css" />
+</head>
 
-            fetch('http://localhost:3333/notifications', {
+<body>
+    <form id="chat">
+        <div class="messages"></div>
+    </form>
+    <script type="text/javascript">
+        var socket = io('http://localhost:3333');
+        //idToken do usuário 1
+        var idToken =
+            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTkzMzE5NSwidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5OTMzMTk1LCJleHAiOjE2NDk5MzY3OTUsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.AApkbguWcNyqPTmFELYfzkOAa-TnxXhm0gMM6fcie9CcTsjr_X-fruFhtJ40kju8fk0KTxacJCyMlybIRteQR6q7lxuVugJtveCvY6BUB-EH6Ftv_Z4DtqRTwDgtkPvWkvWJvi689z5N8xtse_mT1lbbirAJWR5UFZMMhftZ0tjlFaYtebfVodw5MQ2rOWJ8LDhWJlhfnXh-ehKF1g5RmNZjq-mXB6YlT74dtjWGzhZlLVmHoQliB8h6jluxPqbntBoR_q4ok9uWW60_wFsMZ40JOEIxm2kZRvvbrJwT3oNPk9k6cNGsktTuRNREnKMdKWoGLkj_jZETKOfL61zNYw';
+        fetch('http://localhost:3333/notifications', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization:
-                        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTg2OTgxNiwidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5ODY5ODE2LCJleHAiOjE2NDk4NzM0MTYsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.0c1yOynvtUTjSet6zlxOooBBegr0H7bfaBSASkkYQr-QabtTL071F-RdDToqSx4mAVrg2DAp2OAKsksF5e-9YFqoBi0tmTSZkz5IxrP6AiznHEgEjHMhb7ia3m8RiMVpqR__2yRKZUVN5ebbPykWzlbrw90qesXZUQyxSlDwfsB07WYFmolWW0akV_v6Zj_FA097vSMBqD0_w-P7gDXnRf51q0zJ6ug4bS6qN5J6sIhcvdgREI8yDnfayXzxHSfY8JD8GrR6csb4-vUv2vhCf3eqk7i_QeUU-jMSkeI7JL8jsmt6nDyqJf7UsgW2qnu-1tIxrEJFfrrpGzFt7ovsiw',
+                    Authorization: idToken,
                 },
             })
-                .then((response) => response.json())
-                .then((notifications) => {
-                    if (notifications.length > 0) {
-                        for (notification of notifications) {
-                            console.log(notification);
-                        }
+            .then((response) => response.json())
+            .then((notifications) => {
+                if (notifications.length > 0) {
+                    for (notification of notifications) {
+                        console.log(notification);
                     }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-
-            socket.on('receivedNotification', (notification) => {
-                console.log(notification);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
-        </script>
-    </body>
+
+        socket.emit('authenticate', idToken);
+
+        socket.on('receivedNotification', (notification) => {
+            console.log(notification);
+        });
+    </script>
+</body>
+
 </html>
