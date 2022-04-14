@@ -23,14 +23,16 @@
         //TOKEN DO USUÁRIO 2, QUE CONVERSARÁ COM O USUÁRIO 1
         var idToken =
             'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXVkIjoiaG93ZHlwcm9qZWN0LWE4NmY4IiwiYXV0aF90aW1lIjoxNjQ5OTMzMjQ0LCJ1c2VyX2lkIjoieXVlZE85SjVPU1luSnVSdlJHYlgyMnlwbUZ6MSIsInN1YiI6Inl1ZWRPOUo1T1NZbkp1UnZSR2JYMjJ5cG1GejEiLCJpYXQiOjE2NDk5MzMyNDQsImV4cCI6MTY0OTkzNjg0NCwiZW1haWwiOiJ0ZXN0ZUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsidGVzdGVAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.avljBvfw6tjgcp8sO5FUuskBnAx1-Rz6uWh5_141ZOkpMK0ykyug6yLicwRBpVLH_lXH9strlVKordopGGwoXODRpM_lpNPrN_dBxe5ce6RJyBcrnUUwqNi7Ledw9YMmOUE9nICZffAFnT1mYWcyQWqbvRPpmU9xnj4o4f-x1gPc_SHZ6gKkcbawMUtN4RktMDP5hasLLx_ppEhcFjkmmTJdjeNUpUcXf-qfxqJaJpfBHcNMxidDjbLc-WSidkKC_GQmqeIbWZutniIJjFFjqsq3GZAGVNQcCe2gkIlgjTchbKAhjh28bLHLi78arky0D8MjlusqO_1wfL2ehgaWYw';
-        var idUserReceiver = 3;
+        var idUserReceiver = 1;
 
+        //FUNÇÃO PARA COLOCAR MENSAGENS NA TELA
         function renderMessage(message) {
             $('.messages').append(
                 `<div class="message"><strong>${message.idUserSender}</strong>: ${message.textContent}</div>`
             );
         }
 
+        //RESGATANDO MENSAGENS ANTERIORES
         fetch('http://localhost:3333/messages/' + idUserReceiver, {
                 method: 'GET',
                 headers: {
@@ -51,13 +53,16 @@
                 console.error('Error:', error);
             });
 
+        //ASSOCIANDO CONTA DO USUÁRIO COM ID DO SOCKET, PARA QUE O USUÁRIO CONSIGA RECEBER SUAS MENSAGENS E NOTIFICAÇÕES
         socket.emit('authenticate', idToken);
 
+        //INSERINDO MENSAGENS QUANDO CHEGAM
         socket.on('receivedMessage', (message) => {
             console.log(message);
             renderMessage(message);
         });
 
+        //MANDANDO MENSAGEM QUANDO FORMULÁRIO FOR SUBMETIDO
         $('#chat').submit((evt) => {
             evt.preventDefault();
 

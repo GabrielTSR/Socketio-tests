@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Notificações</title>
+    <title>Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
 
@@ -15,28 +15,25 @@
 <body>
     <form id="chat">
         <div class="messages"></div>
+        <input type="text" name="message" placeholder="Digite sua mensagem" />
+        <button type="submit">Enviar</button>
     </form>
     <script type="text/javascript">
         var socket = io('http://localhost:3333');
+        //TOKEN DO USUÁRIO 1, QUE CONVERSARÁ COM O USUÁRIO 2
         var idToken =
             'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZhNGY4N2ZmNWQ5M2ZhNmVhMDNlNWM2ZTg4ZWVhMGFjZDJhMjMyYTkiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiR2FicmllbCBUYXZhcmVzIFJvY2hhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdpbVJCZ09tUk5PYkJlTTh0WGlnaURBaUZYLTg1d2k0Y3Z0V0RtZm93PXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvd2R5cHJvamVjdC1hODZmOCIsImF1ZCI6Imhvd2R5cHJvamVjdC1hODZmOCIsImF1dGhfdGltZSI6MTY0OTkzMzE5NSwidXNlcl9pZCI6ImpzeG1KMHlVYVpQQ1Ixb0d1OHB5UXdlbzNoeDEiLCJzdWIiOiJqc3htSjB5VWFaUENSMW9HdThweVF3ZW8zaHgxIiwiaWF0IjoxNjQ5OTMzMTk1LCJleHAiOjE2NDk5MzY3OTUsImVtYWlsIjoiZ2FicmllbGFsdmVzcm9jaGEyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnb29nbGUuY29tIjpbIjEwNjc3Nzk4MjM3NDYxNTY3MzM0NSJdLCJlbWFpbCI6WyJnYWJyaWVsYWx2ZXNyb2NoYTIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.AApkbguWcNyqPTmFELYfzkOAa-TnxXhm0gMM6fcie9CcTsjr_X-fruFhtJ40kju8fk0KTxacJCyMlybIRteQR6q7lxuVugJtveCvY6BUB-EH6Ftv_Z4DtqRTwDgtkPvWkvWJvi689z5N8xtse_mT1lbbirAJWR5UFZMMhftZ0tjlFaYtebfVodw5MQ2rOWJ8LDhWJlhfnXh-ehKF1g5RmNZjq-mXB6YlT74dtjWGzhZlLVmHoQliB8h6jluxPqbntBoR_q4ok9uWW60_wFsMZ40JOEIxm2kZRvvbrJwT3oNPk9k6cNGsktTuRNREnKMdKWoGLkj_jZETKOfL61zNYw';
+        var idUserReceiver = 2;
 
-        function markNotificationAsRead() {
-            fetch('http://localhost:3333/notifications/read', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: idToken,
-                    },
-                })
-                .then()
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+        //FUNÇÃO PARA COLOCAR MENSAGENS NA TELA
+        function renderMessage(message) {
+            $('.messages').append(
+                `<div class="message"><strong>${message.idUserSender}</strong>: ${message.textContent}</div>`
+            );
         }
 
-        //RESGATANDO NOTIFICAÇÕES ANTERIORES
-        fetch('http://localhost:3333/notifications', {
+        //RESGATANDO MENSAGENS ANTERIORES
+        fetch('http://localhost:3333/messages/' + idUserReceiver, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,12 +41,11 @@
                 },
             })
             .then((response) => response.json())
-            .then((notifications) => {
-                //LENDO AS NOTIFICAÇÕES
-                markNotificationAsRead();
-                if (notifications.length > 0) {
-                    for (notification of notifications) {
-                        console.log(notification);
+            .then((messages) => {
+                if (messages.length > 0) {
+                    for (message of messages) {
+                        console.log(message);
+                        renderMessage(message);
                     }
                 }
             })
@@ -60,8 +56,27 @@
         //ASSOCIANDO CONTA DO USUÁRIO COM ID DO SOCKET, PARA QUE O USUÁRIO CONSIGA RECEBER SUAS MENSAGENS E NOTIFICAÇÕES
         socket.emit('authenticate', idToken);
 
-        socket.on('receivedNotification', (notification) => {
-            console.log(notification);
+        //INSERINDO MENSAGENS QUANDO CHEGAM
+        socket.on('receivedMessage', (message) => {
+            console.log(message);
+            renderMessage(message);
+        });
+
+        //MANDANDO MENSAGEM QUANDO FORMULÁRIO FOR SUBMETIDO
+        $('#chat').submit((evt) => {
+            evt.preventDefault();
+
+            var message = $('input[name=message]').val();
+
+            if (message.length) {
+                var messageObject = {
+                    idUserReceiver,
+                    message,
+                    idToken,
+                };
+
+                socket.emit('sendMessage', messageObject);
+            }
         });
     </script>
 </body>
